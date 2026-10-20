@@ -101,7 +101,8 @@ if "transkrip" not in st.session_state:
 # ================== VALIDASI ID MODEL (PER PENYEDIA) ==================
 @st.cache_data(ttl=3600, show_spinner=False)
 def _ambil_id_model(penyedia):
-    return sorted(m.id for m in KLIEN[penyedia].models.list().data)
+    # Google sering menambahkan awalan "models/" pada daftar ID — kita lepas dulu
+    return sorted(str(m.id).removeprefix("models/") for m in KLIEN[penyedia].models.list().data)
 
 def model_tersedia(penyedia):
     if penyedia not in KLIEN:
@@ -217,7 +218,8 @@ def bangun_pengumuman(daftar_partisipan, nama_model, topik, log):
 
 # ================== PEMBERSIH TEKS ==================
 def bersihkan_teks(teks, nama_model, semua_nama):
-    """Buang blok <think>, awalan nama sendiri, dan baris yang mengatasnamakan model lain."""
+    """Buang blok <think>, awalan nama sendiri, dan baris yang mengatasnamakan model lain.
+    Versi mentah tetap diarsipkan di metadata."""
     awal = teks.strip()
     teks = re.sub(r"<think>.*?</think>", "", teks, flags=re.S | re.I)
     teks = re.sub(r"<think>.*$", "", teks, flags=re.S | re.I)
@@ -422,7 +424,7 @@ with st.sidebar:
         default=[d for d in DEFAULT_PARTISIPAN if d in opsi],
     )
 
-    # peringatan bila ID model tidak ada di daftar penyedia
+    # peringatan bila ID model tidak ada di daftar penyedia + tampilkan kandidat ID asli
     tersedia_cache = {}
     for n in terpilih:
         prov = DAFTAR_MODEL[n]["penyedia"]
@@ -433,6 +435,11 @@ with st.sidebar:
             st.caption(f"ℹ️ Daftar model {prov} tidak bisa diambil; ID tidak divalidasi.")
         elif DAFTAR_MODEL[n]["id"] not in avail:
             st.warning(f"⚠️ `{DAFTAR_MODEL[n]['id']}` ({n}) tidak ada di daftar {prov} saat ini.")
+            inti = re.split(r"[-/:]", DAFTAR_MODEL[n]["id"].split("/")[-1])[0].lower()
+            mirip = sorted(i for i in avail if inti in i.lower())[:6]
+            if mirip:
+                st.caption("Kandidat ID dari " + prov + ": " +
+                           " · ".join(f"`{i}`" for i in mirip))
 
     if any(DAFTAR_MODEL[n]["penyedia"] == "openrouter" for n in terpilih):
         st.caption("🆓 OpenRouter: gratis maks 20 permintaan/menit, 50/hari (akun tanpa saldo).")
