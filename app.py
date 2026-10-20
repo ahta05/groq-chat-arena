@@ -10,7 +10,7 @@ import streamlit as st
 from openai import OpenAI, APIConnectionError
 
 # ================== PENGATURAN HALAMAN ==================
-st.set_page_config(page_title="Room Chat AI — Eksperimen", page_icon="🔬", layout="wide")
+st.set_page_config(page_title="Room Chat AI - Eksperimen", page_icon="🔬", layout="wide")
 
 # ================== PENYEDIA (SEMUA KOMPATIBEL FORMAT OPENAI) ==================
 BASE_URL = {
@@ -42,7 +42,7 @@ TAG = ["🟦", "🟨", "🟥", "🟩", "🟪", "🟧", "🟫"]  # penanda visual
 TAMPILKAN_ERROR_LENGKAP = True  # True = detail teknis error ikut terlihat peserta
 
 # ================== ATURAN LAB (TIDAK DIUBAH) ==================
-MAKS_TOKEN_PER_PESAN = 800   # batas panjang 1 pesan — patuh kuota gratis
+MAKS_TOKEN_PER_PESAN = 800   # batas panjang 1 pesan - patuh kuota gratis
 BATAS_KARAKTER_LOG = 5000    # memori konteks: 5000 karakter terakhir
 JEDA_COBA_LAG = [10, 20]     # kalau kuota sesak: tunggu 10 dtk, lalu 20 dtk
 
@@ -74,7 +74,7 @@ if not PENYEDIA_AKTIF:
 def buat_klien(penyedia):
     tambahan = {}
     if penyedia == "openrouter":
-        tambahan["default_headers"] = {"X-Title": "Room Chat AI — Eksperimen"}
+        tambahan["default_headers"] = {"X-Title": "Room Chat AI - Eksperimen"}
     return OpenAI(
         api_key=KUNCI[penyedia],
         base_url=BASE_URL[penyedia],
@@ -101,7 +101,7 @@ if "transkrip" not in st.session_state:
 # ================== VALIDASI ID MODEL (PER PENYEDIA) ==================
 @st.cache_data(ttl=3600, show_spinner=False)
 def _ambil_id_model(penyedia):
-    # Google sering menambahkan awalan "models/" pada daftar ID — kita lepas dulu
+    # Google sering menambahkan awalan "models/" pada daftar ID - kita lepas dulu
     return sorted(str(m.id).removeprefix("models/") for m in KLIEN[penyedia].models.list().data)
 
 def model_tersedia(penyedia):
@@ -195,7 +195,7 @@ def bangun_log(transkrip):
             break
         baris_terpilih.insert(0, baris)
         total += len(baris)
-    return "\n\n".join(baris_terpilih) or "(percakapan belum dimulai — Anda peserta pertama yang bicara)"
+    return "\n\n".join(baris_terpilih) or "(percakapan belum dimulai - Anda peserta pertama yang bicara)"
 
 # ================== PENGUMUMAN SITUASI ==================
 def bangun_pengumuman(daftar_partisipan, nama_model, topik, log):
@@ -211,7 +211,7 @@ def bangun_pengumuman(daftar_partisipan, nama_model, topik, log):
         f"Sekarang giliran Anda. Tulis SATU pesan berikutnya sebagai {nama_model}, "
         f"dengan kemampuan terbaik dan gaya komunikasi Anda sendiri.\n"
         f"Format ruangan: satu pesan mengalir kira-kira maksimal 150 kata "
-        f"(ini ruang chat, bukan dokumen — tanpa judul/tabel/daftar panjang).\n"
+        f"(ini ruang chat, bukan dokumen - tanpa judul/tabel/daftar panjang).\n"
         f"Baris berawalan [SISTEM] adalah catatan teknis ruangan, bukan pesan peserta.\n"
         f"Jangan menulis nama Anda di awal pesan, dan jangan menulis pesan atas nama model lain."
     )
@@ -413,9 +413,9 @@ with st.sidebar:
 
     for p, n in NAMA_KUNCI.items():
         if p in PENYEDIA_AKTIF:
-            st.caption(f"✅ {p} — kunci siap")
+            st.caption(f"✅ {p} - kunci siap")
         else:
-            st.caption(f"➖ {p} — kunci `{n}` belum terpasang; partisipannya disembunyikan")
+            st.caption(f"➖ {p} - kunci `{n}` belum terpasang; partisipannya disembunyikan")
 
     opsi = [n for n in DAFTAR_MODEL if DAFTAR_MODEL[n]["penyedia"] in PENYEDIA_AKTIF]
     terpilih = st.multiselect(
@@ -498,7 +498,7 @@ with st.sidebar:
 
 # ================== RUANG PENGAMATAN ==================
 st.title("🔬 Room Chat AI")
-st.caption("Pengamatan: model-model AI lintas penyedia berdiskusi tanpa intervensi manusia — "
+st.caption("Pengamatan: model-model AI lintas penyedia berdiskusi tanpa intervensi manusia - "
            "nama asli, kepribadian alami, kegagalan ikut teramati.")
 st.progress(
     min(st.session_state.giliran / jumlah_maks, 1.0),
@@ -561,7 +561,7 @@ if st.session_state.sedang_jalan:
                 slot.markdown(hasil["teks"])
                 caption_meta(hasil["meta"])
             else:
-                slot.markdown("_(gagal merespons — dicatat sebagai catatan sistem)_")
+                slot.markdown("_(gagal merespons - dicatat sebagai catatan sistem)_")
 
         if hasil["teks"] is not None:
             st.session_state.gagal_beruntun = 0
@@ -575,10 +575,10 @@ if st.session_state.sedang_jalan:
             if TAMPILKAN_ERROR_LENGKAP:
                 ringkas = hasil["error"][:300] + ("…" if len(hasil["error"]) > 300 else "")
                 teks_catatan = (f"{nama_model} gagal merespons ({hasil['penyebab']}). "
-                                f"Detail teknis: {ringkas} — giliran dilewati.")
+                                f"Detail teknis: {ringkas} - giliran dilewati.")
             else:
                 teks_catatan = (f"{nama_model} gagal merespons ({hasil['penyebab']}). "
-                                f"Pesannya tidak terkirim — giliran dilewati.")
+                                f"Pesannya tidak terkirim - giliran dilewati.")
             hasil["meta"].setdefault("penyebab_error", hasil["penyebab"])
             hasil["meta"].setdefault("error_mentah", hasil["error"])
             tambah_entri({
