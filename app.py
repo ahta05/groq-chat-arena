@@ -39,7 +39,7 @@ DAFTAR_MODEL = {
 }
 DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 3.8 Flash"]
 TAG = ["🟦", "🟨", "🟥", "🟩", "🟪", "🟧", "🟫"]  # penanda visual, bukan identitas
-TAMPILKAN_ERROR_LENGKAP = False  # True = detail teknis error ikut terlihat peserta
+TAMPILKAN_ERROR_LENGKAP = True  # True = detail teknis error ikut terlihat peserta
 
 # ================== ATURAN LAB (TIDAK DIUBAH) ==================
 MAKS_TOKEN_PER_PESAN = 800   # batas panjang 1 pesan — patuh kuota gratis
