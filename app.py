@@ -35,7 +35,7 @@ DAFTAR_MODEL = {
     "Gemini 3.8 Flash": {"penyedia": "gemini", "id": "gemini-3.8-flash"},
     "Gemini 3.5 Flash-Lite": {"penyedia": "gemini", "id": "gemini-3.5-flash-lite"},
     "Gemma 4 31B · gratis": {"penyedia": "openrouter", "id": "google/gemma-4-31b-it:free"},
-    "Nemotron 3 Super · gratis": {"penyedia": "openrouter", "id": "nvidia/nemotron-3-super-120b-a12b:free"},
+    "Gemma 4 26B · gratis": {"penyedia": "openrouter", "id": "google/gemma-4-26b-a4b-it:free"},
 }
 DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 3.8 Flash"]
 TAG = ["🟦", "🟨", "🟥", "🟩", "🟪", "🟧", "🟫"]  # penanda visual, bukan identitas
