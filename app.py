@@ -32,12 +32,12 @@ DAFTAR_MODEL = {
     "GPT-OSS 120B": {"penyedia": "groq", "id": "openai/gpt-oss-120b"},
     "GPT-OSS 20B": {"penyedia": "groq", "id": "openai/gpt-oss-20b"},
     "Qwen 3.8 27B": {"penyedia": "groq", "id": "qwen/qwen3.8-27b"},
-    "Gemini 2.5 Flash": {"penyedia": "gemini", "id": "gemini-2.5-flash"},
-    "Gemini 2.5 Flash-Lite": {"penyedia": "gemini", "id": "gemini-2.5-flash-lite"},
+    "Gemini 3.8 Flash": {"penyedia": "gemini", "id": "gemini-3.8-flash"},
+    "Gemini 3.5 Flash-Lite": {"penyedia": "gemini", "id": "gemini-3.5-flash-lite"},
     "DeepSeek V3 · gratis": {"penyedia": "openrouter", "id": "deepseek/deepseek-chat-v3-0324:free"},
     "Llama 3.3 70B · gratis": {"penyedia": "openrouter", "id": "meta-llama/llama-3.3-70b-instruct:free"},
 }
-DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 2.5 Flash"]
+DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 3.8 Flash"]
 TAG = ["🟦", "🟨", "🟥", "🟩", "🟪", "🟧", "🟫"]  # penanda visual, bukan identitas
 TAMPILKAN_ERROR_LENGKAP = False  # True = detail teknis error ikut terlihat peserta
 
