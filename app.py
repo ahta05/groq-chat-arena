@@ -34,8 +34,8 @@ DAFTAR_MODEL = {
     "Qwen 3.8 27B": {"penyedia": "groq", "id": "qwen/qwen3.8-27b"},
     "Gemini 3.8 Flash": {"penyedia": "gemini", "id": "gemini-3.8-flash"},
     "Gemini 3.5 Flash-Lite": {"penyedia": "gemini", "id": "gemini-3.5-flash-lite"},
-    "DeepSeek V3 · gratis": {"penyedia": "openrouter", "id": "deepseek/deepseek-chat-v3-0324:free"},
-    "Llama 3.3 70B · gratis": {"penyedia": "openrouter", "id": "meta-llama/llama-3.3-70b-instruct:free"},
+    "Gemma 4 31B · gratis": {"penyedia": "openrouter", "id": "google/gemma-4-31b-it:free"},
+    "Nemotron 3 Super · gratis": {"penyedia": "openrouter", "id": "nvidia/nemotron-3-super-120b-a12b:free"},
 }
 DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 3.8 Flash"]
 TAG = ["🟦", "🟨", "🟥", "🟩", "🟪", "🟧", "🟫"]  # penanda visual, bukan identitas
