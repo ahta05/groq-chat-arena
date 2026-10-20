@@ -147,7 +147,8 @@ def muat_sesi(nama_file):
             except json.JSONDecodeError:
                 continue
             (konfigurasi if rec.get("jenis") == "konfigurasi" else transkrip).append(rec)
-    giliran_terpakai = [r.get("giliran", 0) for r in transkrip if r.get("nama") != "SISTEM"]
+    giliran_terpakai = [r.get("giliran", 0) for r in transkrip
+                        if r.get("nama") != "SISTEM" and r.get("jenis") != "pengamat"]
     st.session_state.transkrip = transkrip
     st.session_state.konfigurasi_log = konfigurasi
     st.session_state.giliran = (max(giliran_terpakai) + 1) if giliran_terpakai else 0
@@ -216,7 +217,7 @@ def bangun_pengumuman(daftar_partisipan, nama_model, topik, log):
         f"Jangan menulis nama Anda di awal pesan, dan jangan menulis pesan atas nama model lain."
     )
 
-# ================== PEMBERSIH TEKS ==================
+# ================== PENGHAPUS TEKS ==================
 def bersihkan_teks(teks, nama_model, semua_nama):
     """Buang blok <think>, awalan nama sendiri, dan baris yang mengatasnamakan model lain.
     Versi mentah tetap diarsipkan di metadata."""
@@ -311,7 +312,7 @@ def panggil_model(penyedia, id_model, konten, nama_model, semua_nama, batasi_rea
 def hitung_statistik(transkrip):
     baris = {}
     for p in transkrip:
-        if p["nama"] == "SISTEM":
+        if p["nama"] == "SISTEM" or p.get("jenis") == "pengamat":
             continue
         s = baris.setdefault(
             p["nama"],
@@ -401,6 +402,10 @@ def tampil_entri(p):
             st.warning(f"⚙️ {p['teks']}")
         else:
             st.caption(f"〰️ ⚠️ {p['teks']}")
+    elif p.get("jenis") == "pengamat":
+        with st.chat_message("PENGAMAT", avatar="🧑‍🔬"):
+            st.markdown("**PENGAMAT** · 🧑‍🔬 *(pesan manusia)*")
+            st.markdown(p["teks"])
     else:
         with st.chat_message(p["nama"], avatar=p["tag"]):
             st.markdown(f"**{p['nama']}**")
@@ -498,8 +503,9 @@ with st.sidebar:
 
 # ================== RUANG PENGAMATAN ==================
 st.title("🔬 Room Chat AI")
-st.caption("Pengamatan: model-model AI lintas penyedia berdiskusi tanpa intervensi manusia - "
-           "nama asli, kepribadian alami, kegagalan ikut teramati.")
+st.caption("Pengamatan: model-model AI lintas penyedia berdiskusi dan berjalan sendiri - "
+           "kegagalan ikut teramati. Intervensi manusia hanya lewat 🚪 Pintu Pengamat, "
+           "dan selalu terekam sebagai PENGAMAT.")
 st.progress(
     min(st.session_state.giliran / jumlah_maks, 1.0),
     text=f"Giliran {min(st.session_state.giliran, jumlah_maks)}/{jumlah_maks}",
@@ -537,6 +543,29 @@ if st.session_state.transkrip:
             file_name=f"metadata_{st.session_state.sesi_id}.csv",
             mime="text/csv",
         )
+
+# ================== PINTU PENGAMAT (INTERVENSI MANUSIA) ==================
+def kirim_pengamat():
+    teks = str(st.session_state.get("input_pengamat") or "").strip()
+    if not teks:
+        return
+    tambah_entri({
+        "jenis": "pengamat", "giliran": st.session_state.giliran, "waktu": sekarang(),
+        "nama": "PENGAMAT", "tag": "🧑‍🔬", "penyedia": "manusia",
+        "teks": teks, "meta": {},
+    })
+    st.session_state.input_pengamat = ""  # kosongkan kotak ketik
+
+if not st.session_state.sedang_jalan:
+    with st.container(border=True):
+        st.markdown("🚪 **Pintu Pengamat** — selipkan pesanmu ke tengah obrolan. "
+                    "Peserta hanya melihatnya sebagai `PENGAMAT: ...`, tanpa penjelasan apa pun.")
+        st.text_input("Pesan pengamat", key="input_pengamat", label_visibility="collapsed",
+                      placeholder="Ketik pesanmu, lalu klik tombol Masuk...")
+        st.button("🚪 Masuk ke ruangan", on_click=kirim_pengamat, type="secondary",
+                  disabled=not str(st.session_state.get("input_pengamat") or "").strip())
+        st.caption("Gunakan saat sesi dijeda (⏸️). Pesanmu tidak mengambil giliran - "
+                   "peserta berikutnya akan membacanya seperti pesan rekan ruangan.")
 
 # ================== MESIN PERCAKAPAN OTOMATIS ==================
 if st.session_state.sedang_jalan:
