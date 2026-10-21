@@ -37,7 +37,7 @@ DAFTAR_MODEL = {
     "Gemma 4 31B · gratis": {"penyedia": "openrouter", "id": "google/gemma-4-31b-it:free"},
     "Gemma 4 26B · gratis": {"penyedia": "openrouter", "id": "google/gemma-4-26b-a4b-it:free"},
 }
-DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 3.8 Flash"]
+DEFAULT_PARTISIPAN = ["GPT-OSS 120B", "GPT-OSS 20B", "Qwen 3.8 27B", "Gemini 3.5 Flash-Lite"]
 TAG = ["🟦", "🟨", "🟥", "🟩", "🟪", "🟧", "🟫"]  # penanda visual, bukan identitas
 TAMPILKAN_ERROR_LENGKAP = True  # True = detail teknis error ikut terlihat peserta
 
@@ -341,11 +341,26 @@ def hitung_statistik(transkrip):
     return hasil
 
 def format_transkrip(transkrip):
-    out = []
+    konf = st.session_state.konfigurasi_log[-1] if st.session_state.konfigurasi_log else {}
+    header = (
+        "=== HEADER SESI ===\n"
+        f"Sesi ID    : {st.session_state.sesi_id}\n"
+        f"Topik      : {konf.get('topik') or '(tanpa topik - spontan murni)'}\n"
+        f"Peserta    : {', '.join(konf.get('peserta', [])) or '-'}\n"
+        f"Batas pesan: {konf.get('jumlah_maks', '?')}\n"
+        "Keterangan : [SISTEM] = catatan teknis · PENGAMAT = intervensi manusia\n"
+        "===================\n"
+    )
+    baris = []
     for p in transkrip:
-        label = "SISTEM" if p.get("jenis", "pesan") == "catatan" else p["nama"]
-        out.append(f"[{label}]\n{p['teks']}")
-    return "\n\n".join(out)
+        if p.get("jenis", "pesan") == "catatan":
+            label = "SISTEM"
+        elif p.get("jenis") == "pengamat":
+            label = "PENGAMAT"
+        else:
+            label = p["nama"]
+        baris.append(f"[{label} · giliran {p.get('giliran', '?')} · {p.get('waktu', '?')}]\n{p['teks']}")
+    return header + "\n\n" + "\n\n".join(baris)
 
 def ekspor_json(transkrip):
     return json.dumps(
