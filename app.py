@@ -43,7 +43,7 @@ TAMPILKAN_ERROR_LENGKAP = True  # True = detail teknis error ikut terlihat peser
 
 # ================== ATURAN LAB (TIDAK DIUBAH) ==================
 MAKS_TOKEN_PER_PESAN = 800   # batas panjang 1 pesan - patuh kuota gratis
-BATAS_KARAKTER_LOG = 5000    # memori konteks: 5000 karakter terakhir
+BATAS_KARAKTER_LOG = 20000    # memori konteks: 5000 karakter terakhir
 JEDA_COBA_LAG = [10, 20]     # kalau kuota sesak: tunggu 10 dtk, lalu 20 dtk
 
 # ================== PENGATURAN TAMBAHAN ==================
